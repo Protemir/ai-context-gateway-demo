@@ -21,27 +21,33 @@ export class ProviderError extends Error {
 }
 
 const fmt = (n) => (n == null ? '?' : Number(n).toLocaleString('ru-RU'));
+/** 1 токен, 2 токена, 5 токенов */
+export function tokens(n) {
+  const a = Math.abs(n) % 100, b = a % 10;
+  const w = a > 10 && a < 20 ? 'токенов' : b === 1 ? 'токен' : b >= 2 && b <= 4 ? 'токена' : 'токенов';
+  return `${fmt(n)} ${w}`;
+}
 
 export const errors = {
   overLimit: (m) =>
     new GatewayError(
       413,
       'CONTEXT_LIMIT_EXCEEDED',
-      `Запрос слишком длинный для модели: ${fmt(m.tokens)} токенов при допустимых ${fmt(m.maxInput)} (лимит ${fmt(m.limit)}, резерв на ответ ${fmt(m.reserve)}). Сократите текст или разбейте его на части.`,
+      `Запрос слишком длинный для модели: ${tokens(m.tokens)} при допустимых ${fmt(m.maxInput)} (лимит ${fmt(m.limit)}, резерв на ответ ${fmt(m.reserve)}). Сократите текст или разбейте его на части.`,
       `Request is too long for the model: ${m.tokens} tokens, ${m.maxInput} allowed (limit ${m.limit}, answer reserve ${m.reserve}).`,
     ),
   overAdmission: (m, window) =>
     new GatewayError(
       413,
       'CONTEXT_LIMIT_EXCEEDED',
-      `Провайдер не примет запрос: по его оценке ${fmt(m.admission)} токенов при окне модели ${fmt(window)}. Сократите текст.`,
+      `Провайдер не примет запрос: по его оценке ${tokens(m.admission)} при окне модели ${fmt(window)}. Сократите текст.`,
       `The provider will refuse the request: its estimate is ${m.admission} tokens, model window ${window}.`,
     ),
   cannotFit: (strategy, m, why) =>
     new GatewayError(
       413,
       'CONTEXT_LIMIT_EXCEEDED_AFTER_STRATEGY',
-      `Стратегия «${strategy}» не смогла уложить запрос в ${fmt(m.maxInput)} токенов: ${why}. Сократите последнее сообщение.`,
+      `Стратегия «${strategy}» не смогла уложить запрос в ${tokens(m.maxInput)}: ${why}. Сократите последнее сообщение.`,
       `Strategy "${strategy}" could not fit the request into ${m.maxInput} tokens: ${why}.`,
     ),
   tooManyParts: (parts, max) =>

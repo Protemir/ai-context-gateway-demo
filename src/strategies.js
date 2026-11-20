@@ -1,6 +1,6 @@
 // Overflow strategies (TZ 3.3). One is fixed in the config before the tests;
 // all of them return either messages that fit, a final answer, or a GatewayError.
-import { errors } from './errors.js';
+import { errors, tokens } from './errors.js';
 import { contentText } from './counter.js';
 import { splitByTokens } from './tokenizer/bpe.js';
 
@@ -32,7 +32,7 @@ export function partition(messages) {
 const total = (counter, msgs) => counter.prompt(msgs).total;
 
 /** Keep the beginning and the end of a text so that it has at most `maxTokens` tokens. */
-export function truncateMiddle(tok, text, maxTokens, markerFor = (n) => `\n[…шлюз опустил ${n} токенов…]\n`) {
+export function truncateMiddle(tok, text, maxTokens, markerFor = (n) => `\n[…шлюз опустил ${tokens(n)}…]\n`) {
   const words = [...tok.words(text)].map((w) => ({ w, n: tok.word(w).length }));
   const all = words.reduce((a, x) => a + x.n, 0);
   if (all <= maxTokens) return { text, removed: 0 };
