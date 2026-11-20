@@ -1,0 +1,395 @@
+{
+  "run": "pmworvoej",
+  "base": "https://ai-gateway-demo.protemir.workers.dev",
+  "strategy": "split",
+  "date": "2026-11-20T09:24:50.382Z",
+  "ms": 9970,
+  "gateway_latency_ms": {
+    "p50": 118,
+    "p95": 129,
+    "max": 257
+  },
+  "retries_platform": 0,
+  "byScenario": {
+    "5.1": {
+      "total": 120,
+      "statuses": {
+        "200": 120
+      }
+    },
+    "5.2": {
+      "total": 96,
+      "statuses": {
+        "200": 94,
+        "413 CONTEXT_LIMIT_EXCEEDED_AFTER_STRATEGY": 2
+      }
+    },
+    "5.3": {
+      "total": 64,
+      "statuses": {
+        "200": 19,
+        "413 CONTEXT_LIMIT_EXCEEDED_AFTER_STRATEGY": 42,
+        "413 CONTEXT_TOO_LARGE_FOR_SPLIT": 3
+      }
+    },
+    "5.4": {
+      "total": 20,
+      "statuses": {
+        "200": 20
+      }
+    },
+    "5.5": {
+      "total": 20,
+      "statuses": {
+        "200": 4,
+        "502 UPSTREAM_ERROR": 8,
+        "504 UPSTREAM_TIMEOUT": 4,
+        "502 UPSTREAM_CONTEXT_REJECTED": 4
+      }
+    }
+  },
+  "total": 320,
+  "criteria": [
+    {
+      "id": "4.1",
+      "name": "Запросы в пределах лимита проходят без изменений",
+      "need": "≥ 99%",
+      "value": 100,
+      "detail": "199 из 199",
+      "pass": true
+    },
+    {
+      "id": "4.2",
+      "name": "Запросы выше лимита обработаны контролируемо",
+      "need": "100%",
+      "value": 100,
+      "detail": "101 из 101",
+      "pass": true
+    },
+    {
+      "id": "4.3",
+      "name": "Классификация относительно лимита верна",
+      "need": "≥ 99%",
+      "value": 100,
+      "detail": "310 из 310",
+      "pass": true
+    },
+    {
+      "id": "4.4",
+      "name": "Нет повторной отправки превышенного запроса",
+      "need": "0 нарушений",
+      "value": 0,
+      "detail": "повторов заблокировано 10 из 10; превышенных отправлено без изменений: 0",
+      "pass": true
+    },
+    {
+      "id": "4.5",
+      "name": "Диагностика в журнале по каждому превышению",
+      "need": "100%",
+      "value": 100,
+      "detail": "101 из 101",
+      "pass": true
+    },
+    {
+      "id": "5.5",
+      "name": "Ошибки внешнего API отделены от превышения",
+      "need": "100%",
+      "value": 100,
+      "detail": "20 из 20",
+      "pass": true
+    },
+    {
+      "id": "—",
+      "name": "Необработанные падения шлюза (GATEWAY_INTERNAL)",
+      "need": "0",
+      "value": 0,
+      "detail": "0",
+      "pass": true
+    }
+  ],
+  "failures": [],
+  "samples": [
+    {
+      "id": "5.1-001",
+      "note": "799 токенов",
+      "status": 200,
+      "code": "ok",
+      "gateway": {
+        "class": "within",
+        "tokens": null,
+        "applied": null,
+        "actions": {}
+      }
+    },
+    {
+      "id": "5.1-041",
+      "note": "3811 токенов",
+      "status": 200,
+      "code": "ok",
+      "gateway": {
+        "class": "within",
+        "tokens": 3811,
+        "applied": null,
+        "actions": {}
+      }
+    },
+    {
+      "id": "5.1-081",
+      "note": "2909 токенов",
+      "status": 200,
+      "code": "ok",
+      "gateway": {
+        "class": "within",
+        "tokens": 2909,
+        "applied": null,
+        "actions": {}
+      }
+    },
+    {
+      "id": "5.2-001",
+      "note": "7680 токенов, ровно на лимите",
+      "status": 200,
+      "code": "ok",
+      "gateway": {
+        "class": "near",
+        "tokens": 7680,
+        "applied": null,
+        "actions": {}
+      }
+    },
+    {
+      "id": "5.2-041",
+      "note": "7012 токенов, в зоне около лимита",
+      "status": 200,
+      "code": "ok",
+      "gateway": {
+        "class": "near",
+        "tokens": 7012,
+        "applied": null,
+        "actions": {}
+      }
+    },
+    {
+      "id": "5.2-081",
+      "note": "7937 токенов при max_tokens=256",
+      "status": 200,
+      "code": "ok",
+      "gateway": {
+        "class": "over",
+        "tokens": 7937,
+        "applied": "split",
+        "actions": {
+          "parts": 2,
+          "map_calls": 2,
+          "empty_part_answers": 0
+        }
+      }
+    },
+    {
+      "id": "5.3-025",
+      "note": "длинная история, 13522 токенов",
+      "status": 413,
+      "code": "CONTEXT_LIMIT_EXCEEDED_AFTER_STRATEGY",
+      "gateway": {
+        "estimated_tokens": 13522,
+        "limit": 8192,
+        "reserve": 512,
+        "max_input": 7680,
+        "strategy": "split",
+        "class": "over"
+      }
+    },
+    {
+      "id": "5.4-001",
+      "note": "первая отправка, 13529 токенов",
+      "status": 200,
+      "code": "ok",
+      "gateway": {
+        "class": "over",
+        "tokens": 13529,
+        "applied": "split",
+        "actions": {
+          "parts": 2,
+          "map_calls": 2,
+          "empty_part_answers": 0
+        }
+      }
+    },
+    {
+      "id": "5.5-001",
+      "note": "608 токенов, сбой провайдера: upstream_500",
+      "status": 502,
+      "code": "UPSTREAM_ERROR",
+      "gateway": {
+        "upstream": "3030: Internal Server Error",
+        "estimated_tokens": null,
+        "limit": 8192,
+        "reserve": 512,
+        "max_input": 7680,
+        "strategy": "split",
+        "class": "within"
+      }
+    },
+    {
+      "id": "5.5-002",
+      "note": "2949 токенов, сбой провайдера: upstream_500",
+      "status": 502,
+      "code": "UPSTREAM_ERROR",
+      "gateway": {
+        "upstream": "3030: Internal Server Error",
+        "estimated_tokens": 2949,
+        "limit": 8192,
+        "reserve": 512,
+        "max_input": 7680,
+        "strategy": "split",
+        "class": "within"
+      }
+    },
+    {
+      "id": "5.5-003",
+      "note": "431 токенов, сбой провайдера: upstream_500",
+      "status": 502,
+      "code": "UPSTREAM_ERROR",
+      "gateway": {
+        "upstream": "3030: Internal Server Error",
+        "estimated_tokens": null,
+        "limit": 8192,
+        "reserve": 512,
+        "max_input": 7680,
+        "strategy": "split",
+        "class": "within"
+      }
+    },
+    {
+      "id": "5.5-004",
+      "note": "1239 токенов, сбой провайдера: upstream_500",
+      "status": 502,
+      "code": "UPSTREAM_ERROR",
+      "gateway": {
+        "upstream": "3030: Internal Server Error",
+        "estimated_tokens": null,
+        "limit": 8192,
+        "reserve": 512,
+        "max_input": 7680,
+        "strategy": "split",
+        "class": "within"
+      }
+    },
+    {
+      "id": "5.5-005",
+      "note": "797 токенов, сбой провайдера: upstream_500",
+      "status": 502,
+      "code": "UPSTREAM_ERROR",
+      "gateway": {
+        "upstream": "3030: Internal Server Error",
+        "estimated_tokens": null,
+        "limit": 8192,
+        "reserve": 512,
+        "max_input": 7680,
+        "strategy": "split",
+        "class": "within"
+      }
+    },
+    {
+      "id": "5.5-006",
+      "note": "1310 токенов, сбой провайдера: upstream_500",
+      "status": 502,
+      "code": "UPSTREAM_ERROR",
+      "gateway": {
+        "upstream": "3030: Internal Server Error",
+        "estimated_tokens": null,
+        "limit": 8192,
+        "reserve": 512,
+        "max_input": 7680,
+        "strategy": "split",
+        "class": "within"
+      }
+    },
+    {
+      "id": "5.5-007",
+      "note": "752 токенов, сбой провайдера: upstream_500",
+      "status": 502,
+      "code": "UPSTREAM_ERROR",
+      "gateway": {
+        "upstream": "3030: Internal Server Error",
+        "estimated_tokens": null,
+        "limit": 8192,
+        "reserve": 512,
+        "max_input": 7680,
+        "strategy": "split",
+        "class": "within"
+      }
+    },
+    {
+      "id": "5.5-008",
+      "note": "756 токенов, сбой провайдера: upstream_500",
+      "status": 502,
+      "code": "UPSTREAM_ERROR",
+      "gateway": {
+        "upstream": "3030: Internal Server Error",
+        "estimated_tokens": null,
+        "limit": 8192,
+        "reserve": 512,
+        "max_input": 7680,
+        "strategy": "split",
+        "class": "within"
+      }
+    },
+    {
+      "id": "5.5-009",
+      "note": "2454 токенов, сбой провайдера: timeout",
+      "status": 504,
+      "code": "UPSTREAM_TIMEOUT",
+      "gateway": {
+        "estimated_tokens": 2454,
+        "limit": 8192,
+        "reserve": 512,
+        "max_input": 7680,
+        "strategy": "split",
+        "class": "within"
+      }
+    },
+    {
+      "id": "5.5-010",
+      "note": "2757 токенов, сбой провайдера: timeout",
+      "status": 504,
+      "code": "UPSTREAM_TIMEOUT",
+      "gateway": {
+        "estimated_tokens": 2757,
+        "limit": 8192,
+        "reserve": 512,
+        "max_input": 7680,
+        "strategy": "split",
+        "class": "within"
+      }
+    },
+    {
+      "id": "5.5-011",
+      "note": "2764 токенов, сбой провайдера: timeout",
+      "status": 504,
+      "code": "UPSTREAM_TIMEOUT",
+      "gateway": {
+        "estimated_tokens": 2764,
+        "limit": 8192,
+        "reserve": 512,
+        "max_input": 7680,
+        "strategy": "split",
+        "class": "within"
+      }
+    },
+    {
+      "id": "5.5-012",
+      "note": "2687 токенов, сбой провайдера: timeout",
+      "status": 504,
+      "code": "UPSTREAM_TIMEOUT",
+      "gateway": {
+        "estimated_tokens": 2687,
+        "limit": 8192,
+        "reserve": 512,
+        "max_input": 7680,
+        "strategy": "split",
+        "class": "within"
+      }
+    }
+  ]
+}

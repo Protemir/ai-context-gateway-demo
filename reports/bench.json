@@ -1,0 +1,30 @@
+{
+  "node": "v24.21.0",
+  "init_ms": 183,
+  "rows": [
+    {
+      "tokens": 1000,
+      "chars": 3057,
+      "cold_ms": 2,
+      "warm_ms": 0.6
+    },
+    {
+      "tokens": 8000,
+      "chars": 30018,
+      "cold_ms": 8.5,
+      "warm_ms": 4.9
+    },
+    {
+      "tokens": 32000,
+      "chars": 122138,
+      "cold_ms": 19.9,
+      "warm_ms": 28.3
+    },
+    {
+      "tokens": 128000,
+      "chars": 490292,
+      "cold_ms": 116.5,
+      "warm_ms": 83.4
+    }
+  ]
+}

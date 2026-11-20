@@ -1,0 +1,3 @@
+src/tokenizer/o200k_base.bin is a re-encoding of o200k_base.tiktoken published by
+OpenAI as part of tiktoken (https://github.com/openai/tiktoken), MIT License,
+Copyright (c) 2022 OpenAI, Shantanu Jain.
